@@ -13,7 +13,7 @@ class Store {
   }
 
   write(note) {
-    return writeFileAsync(path.join(__dirname, "db.json"), JSON.stringify(note) || [])
+    return writeFileAsync(path.join(__dirname, "db.json"), JSON.stringify(note))
   }
 
   // parse the JSON string and turn into an object
@@ -42,28 +42,12 @@ class Store {
         return this.write(notes);
       })
   }
-    
-    // .then(notes => {
-    //   newNoteArray = [...notes, newNote];
-    //   this.write(newNoteArray)
-    // });
-
-
-    // return this.getNotes().then(this.getNotes());
-
-    // Get all notes, add the new note, write all the updated notes, return the newNote
-    // return this.getNotes()
-    //   .then(notes => [...notes, newNote])
-    //   .then(updatedNotes => this.write(updatedNotes))
-    //   .then(() => newNote);
-      
-    // use the note argument
-    // create a new note object with your required fields (text, title, id)
-    // write that object to the json file
- 
-
+  
   removeNote(id) {
-    this.getNotes()
+  this.getNotes()
+    .then(notes => {
+      return notes.filter(note => {note.id !== id})
+    })
   
     // get all notes
     // remove the note with the given id

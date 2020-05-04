@@ -6,12 +6,16 @@ router.get("/notes", function(req, res) {
     .catch(err => res.status(500).json(err));;
 });
 
-
 router.post("/notes", (req, res) => {
     store.addNote(req.body)
       .then((note) => res.json(JSON.parse(note)))
       .catch(err => res.status(500).json(err));
   });
 
+router.delete("/notes/:req", function(req, res) {
+  store.getNotes()
+  .then(store.removeNote(req))
+  .then(store.getNotes())
+});
   
 module.exports = router;
