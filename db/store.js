@@ -13,7 +13,7 @@ class Store {
   }
 
   write(note) {
-    return writeFileAsync(path.join(__dirname, "db.json"), JSON.stringify(note))
+    return writeFileAsync(path.join(__dirname, "db.json"), JSON.stringify(note) || [])
   }
 
   // parse the JSON string and turn into an object
@@ -30,18 +30,17 @@ class Store {
   // create a new note object with your required fields (text, title, id)
   // write that object to the json file
   addNote(note) {
-    const newNoteArray = [];
+
     const { title, text } = note;
     if (!title || !text) {
       throw new Error("Note 'title' and 'text' cannot be blank");
     }
-    const newNote = { title, text, id: uuidv1() };;
+    const newNote = { title, text, id: uuidv1() };
     return this.getNotes()
       .then(notes => {
-        newNoteArray.push(notes);;
+        notes.push(newNote);
+        return this.write(notes);
       })
-      .then(newNoteArray.push(newNote))
-      .then(this.write(newNoteArray));
   }
     
     // .then(notes => {
@@ -64,6 +63,8 @@ class Store {
  
 
   removeNote(id) {
+    this.getNotes()
+  
     // get all notes
     // remove the note with the given id
     // and return a list of notes that does NOT have that id (in essence the filtered list)
