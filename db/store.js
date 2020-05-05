@@ -16,9 +16,7 @@ class Store {
     return writeFileAsync(path.join(__dirname, "db.json"), JSON.stringify(note))
   }
 
-  // parse the JSON string and turn into an object
-  // add them to a list
-  // return that list (array)
+  // parse the JSON string and turn into an object // add them to a list // return that list (array)
   getNotes() {
     return this.read().then(notes => {
       var notesObject = JSON.parse(notes);
@@ -26,11 +24,8 @@ class Store {
     });
   }
 
-  // use the note argument
-  // create a new note object with your required fields (text, title, id)
-  // write that object to the json file
+  // use the note argument // create a new note object with your required fields (text, title, id) // write that object to the json file
   addNote(note) {
-
     const { title, text } = note;
     if (!title || !text) {
       throw new Error("Note 'title' and 'text' cannot be blank");
@@ -38,22 +33,17 @@ class Store {
     const newNote = { title, text, id: uuidv1() };
     return this.getNotes()
       .then(notes => {
-        notes.push(newNote);
+        notes.unshift(newNote);
         return this.write(notes);
       })
   }
   
+  // get all notes // remove the note with the given id // and return a list of notes that does NOT have that id (in essence the filtered list)
   removeNote(id) {
-  this.getNotes()
-    .then(notes => {
-      return notes.filter(note => {note.id !== id})
-    })
-  
-    // get all notes
-    // remove the note with the given id
-    // and return a list of notes that does NOT have that id (in essence the filtered list)
+  return this.getNotes()
+    .then(notes => notes.filter(note => note.id !== id))
+    .then(filteredNotes => this.write(filteredNotes))
   }
-
 }
 
 module.exports = new Store()

@@ -8,14 +8,15 @@ router.get("/notes", function(req, res) {
 
 router.post("/notes", (req, res) => {
     store.addNote(req.body)
-      .then((note) => res.json(JSON.parse(note)))
+      .then(store.getNotes())
+      .then(res.redirect("/notes"))
       .catch(err => res.status(500).json(err));
   });
 
-router.delete("/notes/:req", function(req, res) {
-  store.getNotes()
-  .then(store.removeNote(req))
-  .then(store.getNotes())
+router.delete("/notes/:id", function(req, res) {
+  store.removeNote(req.params.id)
+  .then(() => res.json({ ok: true}))
+  .catch(err => res.status(500).json(err))
 });
   
 module.exports = router;
